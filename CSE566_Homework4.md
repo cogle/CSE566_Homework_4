@@ -9,7 +9,7 @@
     My hypothesis is that the CUDA enabled GPU will perform much, much faster. From
 having done the Final Project before this the GPU exhibits extreme performance 
 gains over the CPU. While threading is and can be a powerful tool, this is a 
-numerical problem the exactly the type of problem the GPU is catered to solving. 
+numerical problem, exactly the type of problem the GPU is catered to solving. 
     </p>
 </div>
 
@@ -218,10 +218,10 @@ py.iplot(figure, filename='Cuda-vs-OpenMP-Runtime')
     </p>
     <p>
     In OpenMP each thread is assigned a portion of the problem to
-    solves; each of these threads then go off and independently solve the problem.
+    solve; each of these threads then go off and independently solve the problem.
     That means that between any two threads if one was to look at the progress it is
     possible that one might be in a different place than the other. In order to
-    support this the CPU has a very large Cache to support the various needs of
+    support this the CPU has a very large cache to support the various needs of
     each thread.
     </p>
     <p>
@@ -938,14 +938,14 @@ py.iplot(figure, filename='Cuda-vs-Opt-Runtime')
 <p>
 Above is the optimized code in order to optimize the code I moved the for loop
 that ran was being ran outside from main into the CUDA code block. In order to
-maintain correctness I had to put __syncthreads() code block in to ensure that
+maintain correctness I had to put <b>__syncthreads()</b> code block in to ensure that
 each thread was able to read all the values before they were updated. After all
 threads had finished the updates to their position was recorded.
 </p>
 <p>
 As we can see from the chart above we were able to achieve minimal performance
 gains. While they aren't as drastic as I hoped, partially due to the
-__syncthreads() call, it does show some performance gains. The reason that this
+<b>__syncthreads()</b> call, it does show some performance gains. The reason that this
 does lead to performance gains is that we have moved the iterative code into the
 GPU function call. This allows us to forgo having to call the loop, simply once
 all threads have been updated we update our values. This allows us to gain some

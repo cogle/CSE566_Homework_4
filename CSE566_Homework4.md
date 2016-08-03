@@ -933,7 +933,8 @@ py.iplot(figure, filename='Cuda-vs-Opt-Runtime')
 
 
 <div>
-<img src="CSE566_Homework_4/Results/images/Opt.PNG">
+<img src="https://raw.githubusercontent.com/cogle/CSE566_Homework_4/master/Results/images/Opt.PNG"></img>
+<h3>Data and Code Analysis</h3>
 <p>
 Above is the optimized code in order to optimize the code I moved the for loop
 that ran was being ran outside from main into the CUDA code block. In order to
@@ -947,11 +948,32 @@ gains. While they aren't as drastic as I hoped, partially due to the
 __syncthreads() call, it does show some performance gains. The reason that this
 does lead to performance gains is that we have moved the iterative code into the
 GPU function call. This allows us to forgo having to call the loop, simply once
-all threads have been updated we update our value. This allows us to gain some
-performance as we no longer have to create a for loop and run through it
-one-by-one. Instead the warp can take care of it.
+all threads have been updated we update our values. This allows us to gain some
+performance as we no longer have to create a for loop and run through values
+one-by-one; instead the warp can take care of it.
 </p>
 <div>
+
+<div>
+<h2>Conclusion</h2>
+<p>
+From this problem set I learned a couple of things. First and most obvious is
+that in the world of parallel computing the GPU is a powerful tool. While
+writing CUDA code can be a major pain as I found out during my Final Project.
+However, the performance benefits are remarkable. The first problem in this
+problem set highlighted just how much more powerful the GPU is than the CPU.
+Despite its power the GPU does have its drawback. Besides being hard to code,
+not everything can be parallelized effectively. Code that contains lots of
+branching or relies heavily on being in synch at certain times is a job better
+left for the CPU. In addition we see that while the GPU is a very powerful tool
+it must be used correctly. This is exemplified in Problem 3 where choosing the
+number of threads per block impacts the performance of the problem in a
+non-trivial manner. The graph clearly demonstrates that when the number of
+threads in the block is a multiple of 32 the performance is better. Thus
+highlights that choosing and running CUDA code is not a trivial manner. Thought
+and consideration must be given to the problem and how it will be ran.
+</p>
+</div>
 
 
 ```python

@@ -933,7 +933,7 @@ py.iplot(figure, filename='Cuda-vs-Opt-Runtime')
 
 
 <div>
-<img src=""></img>
+<img src="CSE566_Homework_4/Results/images/Opt.PNG">
 <p>
 Above is the optimized code in order to optimize the code I moved the for loop
 that ran was being ran outside from main into the CUDA code block. In order to

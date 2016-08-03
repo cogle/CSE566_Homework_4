@@ -1,0 +1,105 @@
+My hypothesis is that the CUDA enabled GPU will perform much, much faster. From
+having done the Final Project before this the GPU exhibits extreme performance
+gains over the CPU. While threading is and can be a powerful tool, this is a
+numerical problem the exactly the type of problem the GPU is catered to solving.
+
+The results above should come as no surprise. It was expected that the CUDA
+enabled graphics card would fare much better then OpenMP. The graphic card's
+knockout punch comes from its ability to divide the task up amongst many more
+threads. The manner in which the graphic card an OpenMP parallelize a task is
+very different.
+In OpenMP each thread is assigned a portion of the problem to
+solves; each of these threads then go off and independently solve the problem.
+That means that between any two threads if one was to look at the progress it is
+possible that one might be in a different place than the other. In order to
+support this the CPU has a very large Cache to support the various needs of
+each thread.
+CUDA's approach is single instruction multiple threads(SIMT). This means that a
+single execution instruction is being broadcast to various units. In CUDA the
+cores of a GPU are collected into groups called streaming multiprocessors.
+These streaming multiprocessors take a groups blocks which have been places into
+an abstraction called a warp and execute the same instruction on a given clock
+cycle.
+From the two parallel processing paradigms described above we can see that each
+one has its strengths and weaknesses. In the case of having a program that has a
+heavy emphasis on logic, where each thread may not be executing the same
+instruction due to various conditional statements, the first threading paradigm
+might be a better fit. However, if you have lots of data that is going to be
+undergoing the same operation as any other piece of data the SIMT approach is
+much more efficient approach.
+From this we can begin to understand why the CUDA code would perform so much
+better. This code is simple; there are no complex conditionals it is a simple
+array access and then some calculations. This makes it a prime candidate for
+parallelization across multiple cores. The runtime difference between the two
+sets of code is fairly extreme, but we can understand why. The biggest
+bottle-neck for the CUDA program would be the transfer of data to and from the
+CPU otherwise due to the fact that this code lends itself well to the SIMT
+parallelization ideology.
+
+
+
+In the second problem we were tasked with looking at how the number of blocks in
+the grid would influence the run time of the algorithm. I don't really think it
+will factor into the runtime of the program. So if one was to decrease the
+number of blocks that would certainly decrease the runtime. That would also
+decrease the amount of the problem that is getting solved. So decreasing the
+number of blocks in the grid is out of the question.
+
+From the results above it is hard to draw a definitive conclusion. I don't think
+that using many blocks will really influence the execution of the program unless
+you use an extreme amount, causing the GPU to have to switch out a lot of
+blocks that would ultimately do nothing. So from the results above we see that
+its really hard to determine what effect modifying just the block size would
+have. Yes we can lower the block size, but then we really wouldn't be solving
+the full problem and while achieving a lower runtime, the algorithm would fail
+correctness.
+
+
+Based upon my research the internet has told me that when choosing the number of
+threads, a multiple of 32 performs very well. This is because the maximum number
+of threads in a warp is 32; therefore for max utility of a warp we should aim
+for a multiple of 32; this will ensure that each warp is filled to capacity.
+
+So the results for this particular test are pretty neat. They do indeed prove
+that using a multiple of 32 is the best choice for the particular problem;
+however, as the number of threads per block increases this advantage decreases.
+
+From the results above and comparing them against the previous problem we see
+that choosing the correct number of threads is a far more critical component
+when using CUDA to run code. Threads determine how the code is divvied up to the
+GPU. Poor choices in work allocation translate to poor runtime results as the
+above graph demonstrates. While this is only a toy problem one could imagine a
+much more extensive problem. Having more than one warp with unused cores results
+in a lower GPU utilization overall.
+
+Creating parallel code is not just about being able to break apart code and run
+it in parallel. Rather, as this problem demonstrates parallelization is about
+being able to write parallel code that optimally uses the system's hardware.
+This problem highlight the importance that choice and the difference poor
+hardware utilization makes in running parallelizable code.
+
+This is the same graph from the very first problem, minus the CPU code. In this
+graph we see a very slow increase in time that it takes for the GPU to complete
+the problem. Simply put the GPU is able to handle this problem very well. As
+outlined in the first problem's analysis, this problem is a very good candidate
+for parallelization. The graph is interesting because it appears that it is a
+quadratic increase in runtime, despite a linear increase in the problem size.
+I can not definitively say what causes to resemble a quadratic function, but my
+guess is that it comes from having to send the problem from the CPU to the GPU
+and visa-versa. What this graph does highlight is the blistering speed at which
+the GPU can solve a problem such as this.
+
+Above is the optimized code in order to optimize the code I moved the for loop
+that ran was being ran outside from main into the CUDA code block. In order to
+maintain correctness I had to put __syncthreads() code block in to ensure that
+each thread was able to read all the values before they were updated. After all
+threads had finished the updates to their position was recorded.
+
+As we can see from the chart above we were able to achieve minimal performance
+gains. While they aren't as drastic as I hoped, partially due to the
+__syncthreads() call, it does show some performance gains. The reason that this
+does lead to performance gains is that we have moved the iterative code into the
+GPU function call. This allows us to forgo having to call the loop, simply once
+all threads have been updated we update our value. This allows us to gain some
+performance as we no longer have to create a for loop and run through it
+one-by-one. Instead the warp can take care of it.

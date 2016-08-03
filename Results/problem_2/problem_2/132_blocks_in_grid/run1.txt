@@ -1,0 +1,3 @@
+Thread Count: 118
+Total time: 0.317
+30000 Bodies: average 25.579 Billion Interactions / second

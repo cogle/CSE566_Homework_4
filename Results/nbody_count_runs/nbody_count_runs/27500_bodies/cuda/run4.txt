@@ -1,0 +1,2 @@
+Total time: 0.247
+27500 Bodies: average 27.610 Billion Interactions / second
